@@ -18,8 +18,8 @@ MotorGroup rightMotors({RIGHT_FRONT, RIGHT_BACK}, MotorGearset::blue); // right 
 
 // intake testing
 MotorGroup intakeMotors({INT_CW, INT_CCW}, MotorGearset::blue);
-Motor outTop(OUT_TOP);  
-Motor outBot(OUT_BOT); 
+Motor outtake(OUTTAKE);
+Motor conveyor(CONVEYOR);
 
 // Inertial Sensor on port 11
 Imu imu(11);
@@ -173,6 +173,7 @@ void intake() {
         }
         else if (biggestObj.signature == TEAM_ID) {
             intakeMotors.move(100);
+			conveyor.move(100);
         }
     }
     else {
@@ -183,19 +184,11 @@ void intake() {
 // Does outake based off of button press
 void outake() {
     if (controller.get_digital(E_CONTROLLER_DIGITAL_R1)) {
-        outBot.move(-100);
-    }
-    else if (controller.get_digital(E_CONTROLLER_DIGITAL_L1)) {
-        outTop.move(-100);
-        outBot.move(100);
-    }
-    else if (controller.get_digital(E_CONTROLLER_DIGITAL_L2)) {
-        outTop.move(100);
-        outBot.move(100);
+        outtake.move(100);
+		conveyor.move(100);
     }
     else {
-        outTop.move(0);
-        outBot.move(0);
+        outtake.move(0);
     }
 }
 
