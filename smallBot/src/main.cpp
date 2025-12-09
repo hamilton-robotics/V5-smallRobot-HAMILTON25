@@ -17,9 +17,9 @@ MotorGroup leftMotors({LEFT_FRONT, LEFT_BACK}, MotorGearset::blue); // left moto
 MotorGroup rightMotors({RIGHT_FRONT, RIGHT_BACK}, MotorGearset::blue); // right motor group - ports 6, 7, 9 (reversed)
 
 // intake testing
-MotorGroup intakeMotors({INT_CW, INT_CCW}, MotorGearset::blue);
-Motor outtake(OUTTAKE);
-Motor conveyor(CONVEYOR);
+MotorGroup intakeMotors({INT_CW, INT_CCW}, MotorGearset::green);
+Motor outtake(OUTTAKE, MotorGearset::green);
+Motor conveyor(CONVEYOR, MotorGearset::green);
 
 // Inertial Sensor on port 11
 Imu imu(11);
