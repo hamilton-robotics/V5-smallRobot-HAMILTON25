@@ -7,32 +7,31 @@ using namespace pros;
 // controller
 Controller controller(E_CONTROLLER_MASTER);
 
+// vision
 Vision visionSensor(VIS_PORT);
-
 vision_signature_s_t RED_BLOCK = Vision::signature_from_utility(RED_BLOCK_ID, 8897, 10143, 9520, -863, -129, -496, 3.000, 0);
 vision_signature_s_t BLUE_BLOCK = Vision::signature_from_utility (BLUE_BLOCK_ID, -4197, -3603, -3900, 2015, 8441, 5228, 5.000, 0);
 
-// motor groups
-MotorGroup leftMotors({LEFT_FRONT, LEFT_BACK}, MotorGearset::blue); // left motor group - ports 3 (reversed), 4, 5 (reversed)
-MotorGroup rightMotors({RIGHT_FRONT, RIGHT_BACK}, MotorGearset::blue); // right motor group - ports 6, 7, 9 (reversed)
+// drive motor groups
+MotorGroup leftMotors({LEFT_FRONT, LEFT_BACK}, MotorGearset::blue);
+MotorGroup rightMotors({RIGHT_FRONT, RIGHT_BACK}, MotorGearset::blue);
 
 // intake testing
 MotorGroup intakeMotors({INT_CW, INT_CCW}, MotorGearset::green);
 Motor outtake(OUTTAKE, MotorGearset::green);
 Motor conveyor(CONVEYOR, MotorGearset::green);
 
-// Inertial Sensor on port 11
-Imu imu(11);
-
 // tracking wheels
 // horizontal tracking wheel encoder. Rotation sensor, port 20, not reversed
 Rotation horizontalEnc(20);
 // vertical tracking wheel encoder. Rotation sensor, port 11, reversed
-Rotation verticalEnc(-11);
+Rotation verticalEnc(-10);
 // horizontal tracking wheel. 2.75" diameter, 5.75" offset, back of the robot (negative)
 lemlib::TrackingWheel horizontal(&horizontalEnc, lemlib::Omniwheel::NEW_275, -5.75);
 // vertical tracking wheel. 2.75" diameter, 2.5" offset, left of the robot (negative)
 lemlib::TrackingWheel vertical(&verticalEnc, lemlib::Omniwheel::NEW_275, -2.5);
+// Inertial Sensor on port 11
+Imu imu(1);
 
 // drivetrain settings
 lemlib::Drivetrain drivetrain(&leftMotors, // left motor group
@@ -143,10 +142,8 @@ void autonomous() {
     // the movement will run immediately
     // Unless its another movement, in which case it will wait
     chassis.waitUntil(10);
-    lcd::print(4, "Traveled 10 inches during pure pursuit!");
     // wait until the movement is done
     chassis.waitUntilDone();
-    lcd::print(4, "pure pursuit finished!");
 }
 
 // drive
@@ -166,34 +163,48 @@ void drive() {
 
 // intake based off of color
 void intake() {
-    // get biggest object (doesn't work as expected)
-    vision_object_s_t biggestObj = visionSensor.get_by_size(LARGEST);
-
-    // if R1 is pressed, spin slow
+    // if R2 is pressed, spin slow
     if (controller.get_digital(E_CONTROLLER_DIGITAL_R2)) {
-        intakeMotors.move(25);
+        intakeMotors.move(SLOW);
+
+        // get biggest object (doesn't work as expected)
+        vision_object_s_t biggestObj = visionSensor.get_by_size(LARGEST);
+
         // if a color is sensed, spin faster in the correct direction
-        if (biggestObj.signature == OPP_ID) {
-            intakeMotors.move(-100);
+        if (biggestObj.signature == VISION_OBJECT_ERR_SIG) {
+            intakeMotors.move(FAST);
+            conveyor.move(FAST);
+        }
+        else if (biggestObj.signature == OPP_ID) {
+            intakeMotors.move(-FAST);
         }
         else if (biggestObj.signature == TEAM_ID) {
-            intakeMotors.move(100);
-			conveyor.move(100);
+            intakeMotors.move(FAST);
+            conveyor.move(FAST);
         }
     }
     else {
-        intakeMotors.move(0);
+        intakeMotors.move(HALT);
+        conveyor.move(HALT);
     }
+
+    // if (controller.get_digital(E_CONTROLLER_DIGITAL_R2)) {
+    //     intakeMotors.move(FAST);
+    // }
+    // else {
+    //     intakeMotors.move(HALT);
+    // }
 }
 
 // Does outake based off of button press
 void outake() {
     if (controller.get_digital(E_CONTROLLER_DIGITAL_R1)) {
-        outtake.move(100);
-		conveyor.move(100);
+        outtake.move(FAST);
+		conveyor.move(FAST);
     }
     else {
-        outtake.move(0);
+        outtake.move(HALT);
+        conveyor.move(HALT);
     }
 }
 
