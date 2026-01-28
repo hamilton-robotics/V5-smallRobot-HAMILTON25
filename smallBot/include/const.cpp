@@ -25,3 +25,8 @@ const int CONVEYOR = 7;
 
 // vision sensor port
 const int VIS_PORT = 16;
+
+// motor speeds
+const int FAST = 100;
+const int HALT = 0;
+const int SLOW = 25;
