@@ -11,8 +11,10 @@ const int OPP_ID = BLUE_BLOCK_ID;
 
 // motors for chassis and intake
 const int LEFT_FRONT = 12;
+const int LEFT_MIDDLE = 14;
 const int LEFT_BACK = 19;
 const int RIGHT_FRONT = 13;
+const int RIGHT_MIDDLE = 15;
 const int RIGHT_BACK = 11;
 
 const int INT_CW = 2;
