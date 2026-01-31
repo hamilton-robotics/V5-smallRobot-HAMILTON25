@@ -12,15 +12,9 @@ Vision visionSensor(VIS_PORT);
 vision_signature_s_t RED_BLOCK = Vision::signature_from_utility(RED_BLOCK_ID, 8897, 10143, 9520, -863, -129, -496, 3.000, 0);
 vision_signature_s_t BLUE_BLOCK = Vision::signature_from_utility (BLUE_BLOCK_ID, -4197, -3603, -3900, 2015, 8441, 5228, 5.000, 0);
 
-<<<<<<< HEAD
-// motor groups
+// drive motor groups
 MotorGroup leftMotors({LEFT_FRONT, LEFT_MIDDLE, LEFT_BACK}, MotorGearset::blue); // left motor group - ports 3 (reversed), 4, 5 (reversed)
 MotorGroup rightMotors({RIGHT_FRONT, RIGHT_MIDDLE, RIGHT_BACK}, MotorGearset::blue); // right motor group - ports 6, 7, 9 (reversed)
-=======
-// drive motor groups
-MotorGroup leftMotors({LEFT_FRONT, LEFT_BACK}, MotorGearset::blue);
-MotorGroup rightMotors({RIGHT_FRONT, RIGHT_BACK}, MotorGearset::blue);
->>>>>>> 09b8e012558c581dcb63639d8165c007c10b6095
 
 // intake testing
 MotorGroup intakeMotors({INT_CW, INT_CCW}, MotorGearset::green);
@@ -158,10 +152,10 @@ void drive() {
     int rightX = controller.get_analog(E_CONTROLLER_ANALOG_RIGHT_X);
     int leftY = controller.get_analog(E_CONTROLLER_ANALOG_LEFT_Y);
 
-	if (controller.get_digital(E_CONTROLLER_DIGITAL_L1)) {
-		rightX /= 2;
-		leftY /= 2;
-	}
+	// if (controller.get_digital(E_CONTROLLER_DIGITAL_L2)) {
+	// 	rightX /= 2;
+	// 	leftY /= 2;
+	// }
 
     // move the chassis with curvature drive
     chassis.arcade(rightX, leftY);
@@ -189,6 +183,10 @@ void intake() {
             conveyor.move(FAST);
         }
     }
+    else if (controller.get_digital(E_CONTROLLER_DIGITAL_L2)) {
+        intakeMotors.move(-FAST);
+
+    }
     else {
         intakeMotors.move(HALT);
         conveyor.move(HALT);
@@ -207,6 +205,9 @@ void outake() {
     if (controller.get_digital(E_CONTROLLER_DIGITAL_R1)) {
         outtake.move(FAST);
 		conveyor.move(FAST);
+    }
+    else if (controller.get_digital(E_CONTROLLER_DIGITAL_L1)) {
+        conveyor.move(MID);
     }
     else {
         outtake.move(HALT);
