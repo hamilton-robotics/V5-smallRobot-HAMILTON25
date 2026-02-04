@@ -171,11 +171,12 @@ void intake() {
         vision_object_s_t biggestObj = visionSensor.get_by_size(LARGEST);
 
         // if a color is sensed, spin faster in the correct direction
-        if (biggestObj.signature == VISION_OBJECT_ERR_SIG) {
-            intakeMotors.move(FAST);
-            conveyor.move(FAST);
-        }
-        else if (biggestObj.signature == OPP_ID) {
+        // if (biggestObj.signature == VISION_OBJECT_ERR_SIG) {
+        //     intakeMotors.move(FAST);
+        //     conveyor.move(FAST);
+        // }
+        // else 
+        if (biggestObj.signature == OPP_ID) {
             intakeMotors.move(-FAST);
         }
         else if (biggestObj.signature == TEAM_ID) {

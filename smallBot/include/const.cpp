@@ -24,7 +24,7 @@ const int OUTTAKE = -6;
 const int CONVEYOR = -5;
 
 // vision sensor port
-const int VIS_PORT = 16;
+const int VIS_PORT = 11;
 
 // motor speeds
 const int FAST = 100;
